@@ -1,0 +1,36 @@
+from mpi4py import MPI
+import numpy as np
+
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
+
+# Total size of the array (must be divisible by number of processes for simplicity)
+N = 16
+
+# Step 1: Create data only on the root process
+if rank == 0:
+    data = np.arange(N, dtype='i')  # Integer array: [0, 1, 2, ..., 15]
+    print("Original array:", data)
+else:
+    data = None
+
+# Step 2: Scatter data to all processes
+local_n = N // size
+local_data = np.empty(local_n, dtype='i')
+
+comm.Scatter(data, local_data, root=0)
+
+# Step 3: Each process squares its part of the array
+local_result = local_data ** 2
+
+# Step 4: Gather results at the root process
+result = None
+if rank == 0:
+    result = np.empty(N, dtype='i')
+
+comm.Gather(local_result, result, root=0)
+
+# Step 5: Print result in the root process
+if rank == 0:
+    print("Squared array:", result)

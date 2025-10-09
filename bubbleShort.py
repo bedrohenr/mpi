@@ -2,6 +2,9 @@ import threading
 import numpy as np
 
 def parallel_bubble_sort(arr):
+    if arr is None:
+        return []
+
     threads = []
     for i in range(0, len(arr), 2):
         thread = threading.Thread(target=bubble_sort_pair, args=(arr, i, i+1))

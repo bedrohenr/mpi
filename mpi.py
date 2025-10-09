@@ -18,7 +18,7 @@ else:
     data = None
 
 # Step 2: Scatter data to all processes
-N = data.size()
+N = len(data)
 local_n = N // size
 local_data = np.empty(local_n, dtype='i')
 

@@ -24,8 +24,8 @@ local_data = np.empty(local_n, dtype='i')
 comm.Scatter(data, local_data, root=0)
 
 # Step 3: Each process sorts its part of the array
-print("Lista original:", data)
-sorted_arr = bubbleShort.parallel_bubble_sort(data)
+print("Lista original:", local_data)
+sorted_arr = bubbleShort.parallel_bubble_sort(local_data)
 print("Lista ordenada:", sorted_arr)
 
 # atualizando a variavel data com os itens ordenados
@@ -38,8 +38,6 @@ if rank == 0:
 
 if rank == 0:
     comm.Gather(local_result, result, root=0)
-else:
-    comm.Gather(local_result, None, root=0)        
 
 # Step 5: Print result in the root process
 if rank == 0:

@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 from mpi4py import MPI
 import numpy as np
+import bubbleShort
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 nprocs = comm.Get_size()
 
 if rank == 0:
-    # data = np.arange(15.0)
-    data = np.load('A.npy')
+    data = np.arange(16.0)
+    # data = np.load('A.npy')
 
     # determine the size of each sub-task
     ave, res = divmod(data.size, nprocs)
@@ -24,5 +25,9 @@ else:
     data = None
 
 data = comm.scatter(data, root=0)
+
+print("Lista original:", data)
+sorted_arr = bubbleShort.parallel_bubble_sort(data)
+print("Lista ordenada:", sorted_arr)
 
 print('Process {} has data:'.format(rank), data)

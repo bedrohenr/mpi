@@ -1,5 +1,6 @@
 from mpi4py import MPI
 import numpy as np
+import bubbleShort
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -22,8 +23,10 @@ local_data = np.empty(local_n, dtype='i')
 
 comm.Scatter(data, local_data, root=0)
 
-# Step 3: Each process squares its part of the array
-local_result = local_data ** 2
+# Step 3: Each process sorts its part of the array
+print("Lista original:", arr)
+sorted_arr = bubbleShort.parallel_bubble_sort(arr)
+print("Lista ordenada:", sorted_arr)
 
 # Step 4: Gather results at the root process
 result = None
@@ -34,4 +37,4 @@ comm.Gather(local_result, result, root=0)
 
 # Step 5: Print result in the root process
 if rank == 0:
-    print("Squared array:", result)
+    print("Resultado:", result)

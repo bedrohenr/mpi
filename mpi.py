@@ -7,7 +7,7 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 # Total size of the array (must be divisible by number of processes for simplicity)
-N = 0
+N = 10000000 
 
 # Step 1: Create data only on the root process
 if rank == 0:
@@ -18,7 +18,6 @@ else:
     data = None
 
 # Step 2: Scatter data to all processes
-N = data.size()
 local_n = N // size
 local_data = np.empty(local_n, dtype='i')
 

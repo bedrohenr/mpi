@@ -24,12 +24,13 @@ local_data = np.empty(local_n, dtype='i')
 comm.Scatter(data, local_data, root=0)
 
 # Step 3: Each process sorts its part of the array
-print("Lista original:", data)
-sorted_arr = bubbleShort.parallel_bubble_sort(data)
-print("Lista ordenada:", sorted_arr)
+# print("Lista original:", data)
+# sorted_arr = bubbleShort.parallel_bubble_sort(data)
+# print("Lista ordenada:", sorted_arr)
 
 # atualizando a variavel data com os itens ordenados
-local_result = sorted_arr
+# local_result = sorted_arr
+local_result=data
 
 # Step 4: Gather results at the root process
 result = None

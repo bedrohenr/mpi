@@ -24,13 +24,12 @@ local_data = np.empty(local_n, dtype='i')
 comm.Scatter(data, local_data, root=0)
 
 # Step 3: Each process sorts its part of the array
-# print("Lista original:", data)
-# sorted_arr = bubbleShort.parallel_bubble_sort(data)
-# print("Lista ordenada:", sorted_arr)
+print("Lista original:", data)
+sorted_arr = bubbleShort.parallel_bubble_sort(data)
+print("Lista ordenada:", sorted_arr)
 
 # atualizando a variavel data com os itens ordenados
-# local_result = sorted_arr
-local_result=data
+local_result = sorted_arr
 
 # Step 4: Gather results at the root process
 result = None
@@ -42,8 +41,3 @@ comm.Gather(local_result, result, root=0)
 # Step 5: Print result in the root process
 if rank == 0:
     print("Resultado:", result)
-    final_output = np.concatenate(all_data)
-    
-    print("\n--- Resultado no Rank 0 (Dados Coletados) ---")
-    print("O array completo é uma concatenação de blocos localmente ordenados.")
-    print(f"Array Final Coletado: {final_output}")

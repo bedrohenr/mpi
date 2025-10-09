@@ -8,8 +8,10 @@ rank = comm.Get_rank()
 nprocs = comm.Get_size()
 
 if rank == 0:
-    data = np.arange(16.0)
-    # data = np.load('A.npy')
+    # data = np.arange(16.0)
+    data = np.load('A.npy')
+    print('tamanho: ', data.size)
+    exit()
 
     # determine the size of each sub-task
     ave, res = divmod(data.size, nprocs)

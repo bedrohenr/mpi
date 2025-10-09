@@ -16,13 +16,8 @@ def parallel_bubble_sort(arr):
 
     return arr
 
-# def bubble_sort_pair(arr, i, j):
-#     if arr[i] > arr[j-1]:
-#         arr[i], arr[j] = arr[j], arr[i]
-
-def bubble_sort_pair(arr, i): # Apenas o índice 'i' é necessário
+def bubble_sort_pair(arr, i): 
     j = i + 1
-    # Verifica se j está dentro dos limites (len(arr) - 1)
     if j < len(arr) and arr[i] > arr[j]:
         arr[i], arr[j] = arr[j], arr[i]
 

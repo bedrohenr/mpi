@@ -2,9 +2,6 @@ import threading
 import numpy as np
 
 def parallel_bubble_sort(arr):
-    if not arr:
-        return []
-
     threads = []
     for i in range(0, len(arr), 2):
         thread = threading.Thread(target=bubble_sort_pair, args=(arr, i, i+1))
@@ -17,7 +14,7 @@ def parallel_bubble_sort(arr):
     return arr
 
 def bubble_sort_pair(arr, i, j):
-    if arr[i] > arr[j]:
+    if arr[i] > arr[j-1]:
         arr[i], arr[j] = arr[j], arr[i]
 
 # def main():

@@ -7,12 +7,12 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 # Total size of the array (must be divisible by number of processes for simplicity)
-N = 10000000 
+N = 100 
 
 # Step 1: Create data only on the root process
 if rank == 0:
-    # data = np.arange(N, dtype='i')  # Integer array: [0, 1, 2, ..., 15]
-    data = np.load('A.npy')  # Integer array: [0, 1, 2, ..., 15]
+    data = np.arange(N, dtype='i')  # Integer array: [0, 1, 2, ..., 15]
+    # data = np.load('A.npy')  # Integer array: [0, 1, 2, ..., 15]
     print("Original array:", data)
 else:
     data = None
@@ -36,7 +36,10 @@ result = None
 if rank == 0:
     result = np.empty(N, dtype='i')
 
-comm.Gather(local_result, result, root=0)
+if rank == 0:
+    comm.Gather(local_result, result, root=0)
+else:
+    comm.Gather(local_result, None, root=0)        
 
 # Step 5: Print result in the root process
 if rank == 0:

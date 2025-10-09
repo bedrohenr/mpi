@@ -10,7 +10,8 @@ N = 16
 
 # Step 1: Create data only on the root process
 if rank == 0:
-    data = np.arange(N, dtype='i')  # Integer array: [0, 1, 2, ..., 15]
+    # data = np.arange(N, dtype='i')  # Integer array: [0, 1, 2, ..., 15]
+    data = np.load('A.npy')  # Integer array: [0, 1, 2, ..., 15]
     print("Original array:", data)
 else:
     data = None

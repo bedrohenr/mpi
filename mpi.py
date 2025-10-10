@@ -25,7 +25,7 @@ comm.Scatter(data, local_data, root=0)
 
 # Step 3: Each process sorts its part of the array
 print("Lista original:", local_data)
-sorted_arr = bubbleShort.parallel_bubble_sort(data)
+sorted_arr = bubbleShort.parallel_bubble_sort(local_data)
 print("Lista ordenada:", sorted_arr)
 
 # atualizando a variavel data com os itens ordenados

@@ -11,8 +11,8 @@ N = 1000
 
 # Step 1: Create data only on the root process
 if rank == 0:
-    data = np.load('A.npy')  # Integer array: [0, 1, 2, ..., 15]
-    data = data[:1000]
+    data = np.arange(N, 0, -1, dtype='i')  # Array decrescente
+    # data = np.load('A.npy')  # Array carregado (muito grande...)
     print("Original array:", data)
 else:
     data = None

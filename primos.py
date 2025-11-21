@@ -48,13 +48,10 @@ if __name__ == '__main__':
     LISTA = None
     if rank == 0:
         # Apenas o processo Mestre (rank 0) carrega os dados
-        try:
-            LISTA = np.load('P.npy')
-            N = len(LISTA)
-            print(f"Número total de elementos no vetor: {N}")
-        except FileNotFoundError:
-            print("Erro: Arquivo 'P.npy' não encontrado no diretório.")
-            exit()
+        LISTA = np.load('P.npy')
+        N = len(LISTA)
+        print(f"Número total de elementos no vetor: {N}")
+
     else:
         # Os processos Escravos precisam de 'N' para calcular o tamanho do bloco.
         N = 0
@@ -97,7 +94,11 @@ if __name__ == '__main__':
     contagem_local = calcular_quadrados_locais(bloco_local)
     
     # Agregação dos Resultados (Reduce)
-    
+    rank = comm.Get_rank()
+
+    print(f"Proc {rank} encontrou {contagem_local}")
+    print(f"Tamanho bloco local: {tamanho_bloco_local}")
+
     # Reduce: Soma todas as 'contagem_local' no 'contagem_total' do Mestre (root=0).
     contagem_total = comm.reduce(contagem_local, op=MPI.SUM, root=0)
     
@@ -131,4 +132,4 @@ if __name__ == '__main__':
 
         # 2. retorno(Print no console, numérico): quantidade de quadrados perfeitos
         # Para satisfazer o requisito estrito de retorno (somente o número)
-        print(f"\nRetorno exigido pelo exercício:\n{contagem_total}")
+        print(contagem_total)

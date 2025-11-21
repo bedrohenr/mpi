@@ -99,25 +99,21 @@ local_count = counts[rank]
 
 # Cria o buffer de recebimento para o processo atual (se ainda não tiver sido criado)
 if rank != 0:
-    local_data = np.empty(local_count, dtype=np.int32) 
+    local_data = np.empty(local_count, dtype=np.int64) 
     
 # 4. Distribuição do Array (Scatterv)
 # Scatterv é usado porque os subconjuntos de dados podem ter tamanhos diferentes
-comm.Scatterv([data, counts, displacements, MPI.INT], local_data, root=0)
+comm.Scatterv([data, counts, displacements, MPI.LONG], local_data, root=0)
 
 # 5. Processamento Local (Contagem de Primos)
 local_prime_count = count_primes_in_array(local_data)
 
 # 6. Agregação dos Resultados (Reduce)
 # Soma as contagens locais de todos os processos no Rank 0
-total_prime_count = comm.reduce(local_prime_count, op=MPI.SUM, root=0)
+local_prime_count64 = np.int64(local_prime_count)
+total_prime_count = comm.reduce(local_prime_count64, op=MPI.SUM, root=0)
 
 # 7. Exibição do Resultado (Apenas Rank 0)
 if rank == 0:
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    
-    print(f"Contagem local do Rank 0: {local_prime_count} primos.")
     print(f"Total de números primos no arquivo: {total_prime_count}")
-    print(f"Tempo total de execução: {elapsed_time:.4f} segundos.")
     print(f"--- Fim do Processamento Paralelo ---\n")

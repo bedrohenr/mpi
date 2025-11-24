@@ -1,2 +1,2 @@
-numpy
-mpi4py
+python3-numpy
+python3-mpi4py

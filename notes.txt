@@ -1,0 +1,32 @@
+Maquina A: 192.168.1.222
+Maquina B: 192.168.1.223
+
+# hello_mpi.py
+from mpi4py import MPI
+import socket
+
+# Inicializa o MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()  # O rank (ID) do processo atual
+size = comm.Get_size()  # O número total de processos
+hostname = socket.gethostname() # O hostname da máquina onde o processo está rodando
+
+print(f"Olá do processo {rank} de um total de {size} rodando na máquina: {hostname}")
+
+
+RODAR --
+
+ssh <username>@<ip>
+<senha do pc alvo>
+
+-- Conexão automatica
+
+ssh-keygen -t rsa # criando nova chave
+
+ssh-copy-id <username>@<ip> # copia chave para o pc alvo
+
+scp <path_to_file> <username>@<ip>:<path> ou
+scp <path_to_foder>/* <username>@<ip>:<path>/<new_folder>
+
+mpirun --hostfile <path_to_file> -np <processos> <command> <path_to_file>
+

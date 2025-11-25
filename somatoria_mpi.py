@@ -31,7 +31,8 @@ size = comm.Get_size()
 # -----------------------------
 # Processo 0 lê os dados
 # -----------------------------
-A = np.load("P.npy")
+# A = np.load("P.npy")
+A = [1,2,3,4,5,6]
 
 
 # Distribuir o vetor para todos

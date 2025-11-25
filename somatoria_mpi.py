@@ -33,6 +33,10 @@ size = comm.Get_size()
 # -----------------------------
 A = np.load("P.npy")
 
+
+# Distribuir o vetor para todos
+A = comm.bcast(A, root=0)
+
 # -----------------------------
 # Divisão entre os processos
 # -----------------------------

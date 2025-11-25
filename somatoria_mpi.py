@@ -31,10 +31,8 @@ size = comm.Get_size()
 # -----------------------------
 # Processo 0 lê os dados
 # -----------------------------
-if rank == 0:
-    A = np.loadtxt("A.npy", dtype=int, delimiter=",")
-else:
-    A = None
+A = np.loadtxt("A.npy")
+
 
 # Distribuir o vetor para todos
 A = comm.bcast(A, root=0)

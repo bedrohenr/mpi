@@ -32,7 +32,7 @@ size = comm.Get_size()
 # Processo 0 lê os dados
 # -----------------------------
 if rank == 0:
-    A = np.load("A.npy", allow_pickle=True)
+    A = np.loadtxt("A.npy", dtype=int, delimiter=",")
 else:
     A = None
 

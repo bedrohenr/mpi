@@ -24,7 +24,7 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-FILE_NAME = 'P.npy'
+FILE_NAME = 'T.npy'
 
 if rank == 0:
     data = np.load(FILE_NAME)

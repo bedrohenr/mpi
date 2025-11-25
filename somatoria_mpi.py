@@ -30,7 +30,7 @@ def somatoria_quadratica_paralela(array, num_threads):
 
 if __name__ == '__main__':
     try:
-        array = np.load("A.npy")
+        array = np.load("A.npy", allow_pickle=True)
     except FileNotFoundError:
         print("Erro: O arquivo 'A.npy' não foi encontrado.")
         array = np.array([1, 2, 3, 4, 5, 6], dtype=float)

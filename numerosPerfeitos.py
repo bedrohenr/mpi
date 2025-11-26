@@ -1,70 +1,77 @@
 import numpy as np
 from mpi4py import MPI
-import time
 import math
 
-def ehPerfeito(n):
+def eh_perfeito(n):
     if n < 2:
         return False
     soma = 1
-    limite = int(math.sqrt(n))
-    for i in range(2, limite + 1):
-        if n % i == 0:
-            soma += i
-            outro = n // i
-            if outro != i:
+    raiz = int(math.sqrt(n))
+    for d in range(2, raiz + 1):
+        if n % d == 0:
+            soma += d
+            outro = n // d
+            if outro != d:
                 soma += outro
     return soma == n
 
-def contarPerfeitos(arr):
-    check = np.vectorize(ehPerfeito)
-    return np.sum(check(arr))
+def contar_perfeitos(v):
+    qtd = 0
+    for i in v:
+        if eh_perfeito(i):
+            qtd += 1
+    return qtd
 
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
+def main():
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    n_proc = comm.Get_size()
 
-FILE_NAME = 'T.npy'
+    arquivo = 'T.npy'
 
-if rank == 0:
-    data = np.load(FILE_NAME)
+    if rank == 0:
+        dados = np.load(arquivo)
+        total = len(dados)
 
-    total_elements = len(data)
-    base_count = total_elements // size
-    remainder = total_elements % size
+        base = total // n_proc
+        sobra = total % n_proc
 
-    counts = [base_count + 1 if i < remainder else base_count for i in range(size)]
-    displacements = [sum(counts[:i]) for i in range(size)]
+        tamanhos = []
+        for i in range(n_proc):
+            if i < sobra:
+                tamanhos.append(base + 1)
+            else:
+                tamanhos.append(base)
 
-    print(f"\n--- Início do Processamento Paralelo ---")
-    print(f"Total de processos: {size}")
-    print(f"Total de elementos: {total_elements}")
-    start_time = time.time()
+        inicios = [0]
+        for i in range(1, n_proc):
+            inicios.append(inicios[i - 1] + tamanhos[i - 1])
 
-    local_data = np.empty(counts[0], dtype=data.dtype)
+        dados_local = np.empty(tamanhos[0], dtype=dados.dtype)
+        
+    else:
+        dados = None
+        tamanhos = None
+        inicios = None
+        total = None
 
-else:
-    data = None
-    counts = None
-    displacements = None
-    total_elements = None
+    tamanhos = MPI.COMM_WORLD.bcast(tamanhos, root=0)
+    inicios = MPI.COMM_WORLD.bcast(inicios, root=0)
+    total = MPI.COMM_WORLD.bcast(total, root=0)
 
-counts = comm.bcast(counts, root=0)
-displacements = comm.bcast(displacements, root=0)
-total_elements = comm.bcast(total_elements, root=0)
+    tam_local = tamanhos[rank]
 
-local_count = counts[rank]
+    if rank != 0:
+        dados_local = np.empty(tam_local, dtype=np.int64)
 
-if rank != 0:
-    local_data = np.empty(local_count, dtype=np.int64)
+    comm.Scatterv([dados, tamanhos, inicios, MPI.LONG], dados_local, root=0)
 
-comm.Scatterv([data, counts, displacements, MPI.LONG], local_data, root=0)
+    cont_local = contar_perfeitos(dados_local)
+    
+    contagem_total = comm.reduce(cont_local, op=MPI.SUM, root=0)
 
-local_perfect_count = contarPerfeitos(local_data)
+    if rank == 0:
+        print("Total de números perfeitos no arquivo:", contagem_total)
 
-local_perfect_count64 = np.int64(local_perfect_count)
-total_perfect_count = comm.reduce(local_perfect_count64, op=MPI.SUM, root=0)
-
-if rank == 0:
-    print(f"Total de números perfeitos no arquivo: {total_perfect_count}")
-    print(f"--- Fim do Processamento Paralelo ---\n")
+if __name__ == "__main__":
+    main()

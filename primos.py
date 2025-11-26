@@ -1,6 +1,5 @@
 import numpy as np
 from mpi4py import MPI
-import time
 import math
 
 
@@ -71,11 +70,6 @@ if rank == 0:
     # Ex: para [4, 3, 3]: [0, 4, 7]
     displacements = [sum(counts[:i]) for i in range(size)]
     
-    print(f"\n--- Início do Processamento Paralelo ---")
-    print(f"Total de processos: {size}")
-    print(f"Total de elementos: {total_elements}")
-    start_time = time.time()
-    
     # O Rank 0 precisa de espaço para receber seus próprios dados
     # O bloco de dados do Rank 0 é o primeiro (tamanho = counts[0])
     local_data = np.empty(counts[0], dtype=data.dtype)
@@ -116,4 +110,3 @@ total_prime_count = comm.reduce(local_prime_count64, op=MPI.SUM, root=0)
 # 7. Exibição do Resultado (Apenas Rank 0)
 if rank == 0:
     print(f"Total de números primos no arquivo: {total_prime_count}")
-    print(f"--- Fim do Processamento Paralelo ---\n")

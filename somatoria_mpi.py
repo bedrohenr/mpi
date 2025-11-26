@@ -31,7 +31,7 @@ size = comm.Get_size()
 # -----------------------------
 # Processo 0 lê os dados
 # -----------------------------
-A = np.load("P.npy")
+A = np.load("A.npy")
 # A = [1,2,3,4,5,6]
 
 
@@ -58,3 +58,4 @@ total_sum = comm.reduce(local_sum, op=MPI.SUM, root=0)
 # -----------------------------
 if rank == 0:
     print(total_sum)
+
